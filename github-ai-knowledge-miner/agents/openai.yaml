@@ -1,4 +1,4 @@
 interface:
   display_name: "GitHub AI Knowledge Miner"
   short_description: "Mine AI papers and GitHub updates into a wiki"
-  default_prompt: "Use $github-ai-knowledge-miner to turn recent AI papers, GitHub updates, and gists into source-backed wiki cards."
+  default_prompt: "Use $github-ai-knowledge-miner to turn recent AI papers, GitHub updates, and gists into source-backed wiki cards. When the user asks for bilingual output, write English/Chinese paired wiki pages."

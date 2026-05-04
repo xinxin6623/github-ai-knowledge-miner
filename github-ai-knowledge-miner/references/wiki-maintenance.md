@@ -24,6 +24,15 @@ wiki/
 
 Raw sources are immutable snapshots or source metadata. Wiki pages are synthesized and can be updated.
 
+## Bilingual Page Style
+
+When the user requests bilingual output, write wiki pages in English/Chinese pairs:
+
+- Use paired headings such as `## Top Changes / 本周重点变化`.
+- Keep source facts, URLs, and provenance unchanged.
+- Translate the synthesis, not the citation metadata.
+- Prefer one concise bilingual line over duplicated long paragraphs when space matters.
+
 ## Read-State Rules
 
 Every wiki page must include:

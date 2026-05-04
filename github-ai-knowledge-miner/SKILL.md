@@ -7,7 +7,7 @@ description: Use when mining GitHub commits, pull requests, releases, issues, gi
 
 ## Purpose
 
-Use this skill to turn AI research and GitHub activity into a durable wiki that an agent can search, understand, and update. The goal is not to archive everything; it is to keep high-signal engineering knowledge with source links, reusable patterns, and explicit read-state metadata.
+Use this skill to turn AI research and GitHub activity into a durable wiki that an agent can search, understand, and update. The goal is not to archive everything; it is to keep high-signal engineering knowledge with source links, reusable patterns, explicit read-state metadata, and bilingual presentation when the user asks for it.
 
 ## Workflow
 
@@ -15,7 +15,7 @@ Use this skill to turn AI research and GitHub activity into a durable wiki that 
 2. Gather candidates from metadata first: titles, abstracts, repo metadata, PR titles, commit messages, changed paths, gist descriptions, and curator identity.
 3. Score candidates before deep reading. Only promote sources that pass the collection threshold.
 4. Deep-read accepted candidates: paper text, PR context, diff patches, issue discussion, release notes, or gist revisions.
-5. Extract reusable knowledge into wiki cards with provenance, source links, confidence, and `read_status`.
+5. Extract reusable knowledge into wiki cards with provenance, source links, confidence, `read_status`, and bilingual English/Chinese presentation when requested.
 6. Update related wiki pages: paper cards, repo cards, pattern pages, problem pages, benchmark pages, people pages, and digests.
 7. Preserve raw sources separately from synthesized wiki pages. Do not overwrite source facts with model inference.
 
@@ -68,7 +68,7 @@ Use these ingest modes:
 
 ## Output Pages
 
-Prefer durable pages over one-off summaries:
+Prefer durable pages over one-off summaries. When the user requests bilingual output, write pages with English/Chinese paired headings or paired sentences, keep source facts unchanged, and avoid introducing extra inference in the translation.
 
 - `papers/`: one paper per page.
 - `repos/`: repository profiles and implementation leads.
@@ -80,7 +80,7 @@ Prefer durable pages over one-off summaries:
 
 ## Extraction
 
-Use structured extraction. Do not summarize file-by-file unless the user asks. Identify the problem, reusable idea, evidence, limits, and next actions.
+Use structured extraction. Do not summarize file-by-file unless the user asks. Identify the problem, reusable idea, evidence, limits, and next actions. For bilingual pages, keep the same structure in both languages and translate the synthesis rather than the source facts.
 
 For schemas and card templates, read `references/schemas.md`.
 
@@ -90,4 +90,4 @@ For wiki update procedure and read-state maintenance, read `references/wiki-main
 
 ## Answering From The Wiki
 
-When answering the user, prioritize source-backed statements. Distinguish source facts from inference. Link to source URLs and wiki pages when available. If a page has `read_status: unread` or `needs_reread`, mention that it has not yet been user-reviewed when the distinction matters.
+When answering the user, prioritize source-backed statements. Distinguish source facts from inference. Link to source URLs and wiki pages when available. If a page has `read_status: unread` or `needs_reread`, mention that it has not yet been user-reviewed when the distinction matters. If the user requested bilingual wiki pages, preserve the English/Chinese pairing in future updates unless they ask to switch back.
