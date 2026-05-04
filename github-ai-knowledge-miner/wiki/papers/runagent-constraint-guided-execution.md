@@ -63,11 +63,18 @@ Very high. This is directly about turning plans into reliable execution rather t
 
 ## Related Papers / 相关论文
 
-- Procedural execution diagnostic in `When LLMs Stop Following Steps`
+- [Procedural execution diagnostic](procedural-execution-llm-steps.md) in `When LLMs Stop Following Steps`
 
 ## Related Repos / 相关仓库
 
-- Could map well to workflow engines, constrained agent runtimes, and plan-verification middleware.
+- Could map well to [LangChain](../repos/langchain-2026-05-week1.md), [Phoenix](../repos/phoenix-2026-05-week1.md), workflow engines, constrained agent runtimes, and plan-verification middleware.
+
+## Local Links / 本地索引
+
+- [Wiki index / Wiki 首页](../index.md)
+- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
+- Related papers / 相关论文: [Procedural execution diagnostic](procedural-execution-llm-steps.md)
+- Related repos / 相关仓库: [LangChain](../repos/langchain-2026-05-week1.md), [Phoenix](../repos/phoenix-2026-05-week1.md)
 
 ## Open Questions / 开放问题
 

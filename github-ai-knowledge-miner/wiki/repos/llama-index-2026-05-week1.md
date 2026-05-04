@@ -54,7 +54,13 @@ The PR included a concrete before/after trace example, but no new unit tests wer
 
 ## Related Papers Or Issues / 相关论文或问题
 
-- This is a useful companion to the Phoenix tracing work in the same week. / 它和本周 Phoenix 的 tracing 工作可以一起看。
+- This is a useful companion to the [Phoenix](phoenix-2026-05-week1.md) tracing and agent work in the same week. / 它和本周 [Phoenix](phoenix-2026-05-week1.md) 的 tracing 与 agent 工作可以一起看。
+
+## Local Links / 本地索引
+
+- [Wiki index / Wiki 首页](../index.md)
+- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
+- Related repos / 相关仓库: [Phoenix](phoenix-2026-05-week1.md)
 
 ## When To Reuse / 何时复用
 

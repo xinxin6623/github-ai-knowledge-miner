@@ -54,7 +54,13 @@ The PR extended unit and integration coverage and reported local pass results. /
 
 ## Related Papers Or Issues / 相关论文或问题
 
-- The week’s LightKV paper is conceptually adjacent, though it targets LVLM KV compression rather than low-precision serving kernels. / 本周的 LightKV 论文在概念上是相邻的，不过它针对的是 LVLM 的 KV 压缩，而不是低精度服务 kernel。
+- The week’s [LightKV](../papers/lightkv-lvlm-kv-cache.md) paper is conceptually adjacent, though it targets LVLM KV compression rather than low-precision serving kernels. / 本周的 [LightKV](../papers/lightkv-lvlm-kv-cache.md) 论文在概念上是相邻的，不过它针对的是 LVLM 的 KV 压缩，而不是低精度服务 kernel。
+
+## Local Links / 本地索引
+
+- [Wiki index / Wiki 首页](../index.md)
+- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
+- Related papers / 相关论文: [LightKV](../papers/lightkv-lvlm-kv-cache.md)
 
 ## When To Reuse / 何时复用
 

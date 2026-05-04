@@ -16,7 +16,7 @@ Use this skill to turn AI research and GitHub activity into a durable wiki that 
 3. Score candidates before deep reading. Only promote sources that pass the collection threshold.
 4. Deep-read accepted candidates: paper text, PR context, diff patches, issue discussion, release notes, or gist revisions.
 5. Extract reusable knowledge into wiki cards with provenance, source links, confidence, `read_status`, and bilingual English/Chinese presentation when requested.
-6. Update related wiki pages: paper cards, repo cards, pattern pages, problem pages, benchmark pages, people pages, and digests.
+6. Update related wiki pages: paper cards, repo cards, pattern pages, problem pages, benchmark pages, people pages, and digests. Maintain reciprocal Markdown links among related pages so the wiki forms a navigable local graph.
 7. Preserve raw sources separately from synthesized wiki pages. Do not overwrite source facts with model inference.
 
 ## Collection Rules
@@ -86,7 +86,7 @@ For schemas and card templates, read `references/schemas.md`.
 
 For GitHub, gist, paper, and query search playbooks, read `references/query-playbooks.md`.
 
-For wiki update procedure and read-state maintenance, read `references/wiki-maintenance.md`.
+For wiki update procedure, read-state maintenance, and reciprocal link graph rules, read `references/wiki-maintenance.md`.
 
 ## Answering From The Wiki
 

@@ -53,7 +53,14 @@ The PR included backend and frontend test coverage, plus typecheck and lint veri
 
 ## Related Papers Or Issues / 相关论文或问题
 
-- This sits in the same direction as the week’s constrained-execution and procedural-fidelity papers: more explicit control over how agents are assembled and run. / 这和本周的受约束执行、过程忠实度论文方向一致：对 agent 的组装和运行施加更明确的控制。
+- This sits in the same direction as [RunAgent](../papers/runagent-constraint-guided-execution.md) and [the procedural-execution diagnostic](../papers/procedural-execution-llm-steps.md): more explicit control over how agents are assembled and run. / 这和 [RunAgent](../papers/runagent-constraint-guided-execution.md)、[过程执行诊断](../papers/procedural-execution-llm-steps.md) 的方向一致：对 agent 的组装和运行施加更明确的控制。
+
+## Local Links / 本地索引
+
+- [Wiki index / Wiki 首页](../index.md)
+- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
+- Related papers / 相关论文: [RunAgent](../papers/runagent-constraint-guided-execution.md), [Procedural execution diagnostic](../papers/procedural-execution-llm-steps.md)
+- Related repos / 相关仓库: [LangChain](langchain-2026-05-week1.md), [LlamaIndex](llama-index-2026-05-week1.md)
 
 ## When To Reuse / 何时复用
 

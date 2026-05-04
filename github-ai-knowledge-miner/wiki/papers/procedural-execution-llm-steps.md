@@ -63,12 +63,19 @@ High. This is a clean warning that agentic workflows can degrade as traces lengt
 
 ## Related Papers / 相关论文
 
-- RunAgent
+- [RunAgent](runagent-constraint-guided-execution.md)
 - Other procedural execution and planning-control work
 
 ## Related Repos / 相关仓库
 
-- Agent runtimes with explicit step validation and constrained execution loops
+- Agent runtimes with explicit step validation and constrained execution loops, especially [LangChain](../repos/langchain-2026-05-week1.md) and [Phoenix](../repos/phoenix-2026-05-week1.md)
+
+## Local Links / 本地索引
+
+- [Wiki index / Wiki 首页](../index.md)
+- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
+- Related papers / 相关论文: [RunAgent](runagent-constraint-guided-execution.md)
+- Related repos / 相关仓库: [LangChain](../repos/langchain-2026-05-week1.md), [Phoenix](../repos/phoenix-2026-05-week1.md)
 
 ## Open Questions / 开放问题
 

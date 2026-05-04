@@ -61,11 +61,17 @@ Moderate to high. It is not an agent paper, but it matters for multimodal servin
 
 ## Related Papers / 相关论文
 
-- vLLM NVFP4 KV cache support
+- [vLLM NVFP4 KV cache support](../repos/vllm-2026-05-week1.md)
 
 ## Related Repos / 相关仓库
 
-- vLLM
+- [vLLM](../repos/vllm-2026-05-week1.md)
+
+## Local Links / 本地索引
+
+- [Wiki index / Wiki 首页](../index.md)
+- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
+- Related repos / 相关仓库: [vLLM](../repos/vllm-2026-05-week1.md)
 
 ## Open Questions / 开放问题
 

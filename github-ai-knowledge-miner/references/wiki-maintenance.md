@@ -83,6 +83,16 @@ When updating an existing page:
 - Update related pages.
 - Mark read state according to the rules above.
 
+## Link Graph Rules
+
+Every accepted wiki page should participate in the local link graph:
+
+- Link back to `../index.md` or `../../index.md` depending on page depth.
+- Link to the weekly digest that introduced or updated the page.
+- Convert related papers, repos, patterns, problems, and benchmarks into Markdown links, not plain text.
+- Maintain reciprocal links when two pages materially reference each other.
+- Prefer relative Markdown links so the wiki works in GitHub and local Markdown tools.
+
 ## Index Rules
 
 Keep `wiki/index.md` concise. It should point to high-value pages rather than duplicate them.

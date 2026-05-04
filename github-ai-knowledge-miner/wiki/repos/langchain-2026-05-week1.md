@@ -56,7 +56,14 @@ The schema refactor is cleaner but introduces a new exported dataclass that inte
 
 ## Related Papers Or Issues / 相关论文或问题
 
-- This repo movement lines up with the week's broader theme: stronger execution control and better state ownership. / 这次仓库变动和本周更大的主题一致：更强的执行控制，以及更清晰的状态所有权。
+- This repo movement lines up with [RunAgent](../papers/runagent-constraint-guided-execution.md), [the procedural-execution diagnostic](../papers/procedural-execution-llm-steps.md), and the [weekly digest](../weekly-digests/2026-05-05-ai-weekly.md): stronger execution control and better state ownership. / 这次仓库变动和 [RunAgent](../papers/runagent-constraint-guided-execution.md)、[过程执行诊断](../papers/procedural-execution-llm-steps.md) 以及 [周报](../weekly-digests/2026-05-05-ai-weekly.md) 的主题一致：更强的执行控制，以及更清晰的状态所有权。
+
+## Local Links / 本地索引
+
+- [Wiki index / Wiki 首页](../index.md)
+- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
+- Related papers / 相关论文: [RunAgent](../papers/runagent-constraint-guided-execution.md), [Procedural execution diagnostic](../papers/procedural-execution-llm-steps.md)
+- Related repos / 相关仓库: [Phoenix](phoenix-2026-05-week1.md)
 
 ## When To Reuse / 何时复用
 
