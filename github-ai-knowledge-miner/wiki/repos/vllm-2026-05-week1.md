@@ -1,5 +1,5 @@
 ---
-title: vLLM - NVFP4 KV Cache Support
+title: vLLM Low-Precision KV Cache / vLLM 低精度 KV Cache
 page_type: repo
 read_status: unread
 read_by_user: false
@@ -20,52 +20,30 @@ tags:
   - read:unread
 ---
 
-## Problem Background / 问题背景
+## Knowledge Point / 知识点
 
-NVFP4 support was already partly in place on the write path. The missing piece was the read and attention side of KV cache inference through FlashInfer on Blackwell-class hardware. / NVFP4 在写入路径上已经部分就绪，缺的主要是 Blackwell 级硬件上通过 FlashInfer 做 KV cache 推理时的读取和 attention 侧。
+Low-precision KV cache support must update storage layout, attention backend, dtype handling, tests, and docs as one path. / 低精度 KV cache 支持必须把存储布局、attention 后端、dtype 处理、测试和文档作为一条路径一起更新。
 
-## Change Summary / 变更摘要
+## Pain Point / 痛点
 
-This PR finished end-to-end NVFP4 KV cache support by wiring `nvfp4` into supported cache dtypes, forcing the `trtllm-gen` backend where needed, forwarding block scales, and handling FP8 output buffers when the model dtype is not FP8. / 这个 PR 通过把 `nvfp4` 接入支持的 cache dtype、在需要时强制使用 `trtllm-gen` 后端、转发 block scale，并在模型 dtype 不是 FP8 时处理 FP8 输出缓冲，完成了端到端 NVFP4 KV cache 支持。
+Large-model serving is constrained by KV cache memory and backend support. Partial low-precision support often breaks only during real inference. / 大模型服务受 KV cache 内存和后端支持约束。低精度支持如果只做一半，常常到真实推理时才坏。
 
-## Architecture Idea / 架构想法
+## Method / 方法
 
-The implementation treats KV cache quantization as a hardware-aware data path: packed cache layout, backend selection, output dtype handling, and model-opt recognition all move together. / 这个实现把 KV cache 量化当成一个感知硬件的完整数据路径：packed cache 布局、后端选择、输出 dtype 处理和 model-opt 识别一起推进。
+vLLM wired NVFP4 through FlashInfer, selected `trtllm-gen` where required, forwarded block scales, and handled FP8 output conversion. / vLLM 把 NVFP4 接入 FlashInfer，在需要时选择 `trtllm-gen`，转发 block scale，并处理 FP8 输出转换。
 
-## Key Files And Symbols / 关键文件与符号
+## Technology / 技术
 
-- `supported_kv_cache_dtypes`
-- `nvfp4_kv_cache_split_views`
-- `get_dtype_for_flashinfer`
-- `ModelOptKVCacheMethod`
-- `KV_CACHE_QUANT_ALGOS`
+NVFP4 KV cache, FlashInfer, TensorRT-LLM generated backend, FP8 output buffer, block-scale views, ModelOpt quantization metadata. / NVFP4 KV cache、FlashInfer、TensorRT-LLM 生成后端、FP8 输出缓冲、block-scale view、ModelOpt 量化元数据。
 
-## Reusable Pattern / 可复用模式
+## Solves / 解决了什么
 
-When adding a new cache dtype, update the data path, backend selection, tests, and docs together. Partial support tends to fail in the most annoying way: only after deployment. / 新增 cache dtype 时，要同时更新数据路径、后端选择、测试和文档。部分支持最容易在最麻烦的时候出问题：上线之后才暴露。
+It enables end-to-end NVFP4 KV cache inference on supported Blackwell-class paths, reducing memory pressure for serving. / 它在支持的 Blackwell 级路径上实现端到端 NVFP4 KV cache 推理，降低服务端内存压力。
 
-## Tradeoffs / 取舍
+## Graph Edges / 图谱边
 
-This is hardware-specific complexity, so the maintenance surface grows with each quantized cache variant. The upside is lower memory pressure and better throughput on supported systems. / 这属于硬件特化复杂度，所以每多一种量化 cache 变体，维护面就会变大。好处是在支持的系统上能换来更低的内存压力和更好的吞吐。
+- Supports / 支撑: [KV Cache Memory Efficiency / KV Cache 内存效率](../patterns/kv-cache-memory-efficiency.md)
+- Related / 相关: [LightKV Multimodal KV Compression / LightKV 多模态 KV 压缩](../papers/lightkv-lvlm-kv-cache.md)
+- Weekly context / 周报上下文: [AI Weekly Digest - 2026-05-05 / AI 周报 - 2026-05-05](../weekly-digests/2026-05-05-ai-weekly.md)
+- Index / 首页: [AI Knowledge Graph Index / AI 知识图谱索引](../index.md)
 
-## Tests Or Eval Evidence / 测试与证据
-
-The PR extended unit and integration coverage and reported local pass results. / 这个 PR 扩展了单测和集成测试覆盖，并给出了本地通过结果。
-
-## Related Papers Or Issues / 相关论文或问题
-
-- The week’s [LightKV](../papers/lightkv-lvlm-kv-cache.md) paper is conceptually adjacent, though it targets LVLM KV compression rather than low-precision serving kernels. / 本周的 [LightKV](../papers/lightkv-lvlm-kv-cache.md) 论文在概念上是相邻的，不过它针对的是 LVLM 的 KV 压缩，而不是低精度服务 kernel。
-
-## Local Links / 本地索引
-
-- [Wiki index / Wiki 首页](../index.md)
-- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
-- Related papers / 相关论文: [LightKV](../papers/lightkv-lvlm-kv-cache.md)
-
-## When To Reuse / 何时复用
-
-Reuse this implementation shape when introducing a new KV cache quantization format or backend-specific inference path. / 只要要引入新的 KV cache 量化格式或特定后端推理路径，就可以复用这个实现形态。
-
-## When Not To Reuse / 何时不复用
-
-Do not mirror this complexity unless the hardware and deployment constraints justify it. / 除非硬件和部署约束真的值得，否则不要照搬这么高的复杂度。

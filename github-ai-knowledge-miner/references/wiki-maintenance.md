@@ -24,10 +24,32 @@ wiki/
 
 Raw sources are immutable snapshots or source metadata. Wiki pages are synthesized and can be updated.
 
+## Knowledge Graph Style
+
+The wiki should grow as a graph of concise knowledge points, not as long reading notes. Each accepted page should answer:
+
+- What pain point exists?
+- What method solves it?
+- What technology or framework is used?
+- What concrete problem or capability is solved?
+- Which existing nodes should this connect to?
+
+Use this default node shape:
+
+```text
+## Knowledge Point / 知识点
+## Pain Point / 痛点
+## Method / 方法
+## Technology / 技术
+## Solves / 解决了什么
+## Graph Edges / 图谱边
+```
+
 ## Bilingual Page Style
 
 When the user requests bilingual output, write wiki pages in English/Chinese pairs:
 
+- Include Chinese in the frontmatter `title`.
 - Use paired headings such as `## Top Changes / 本周重点变化`.
 - Keep source facts, URLs, and provenance unchanged.
 - Translate the synthesis, not the citation metadata.
@@ -72,8 +94,10 @@ Meaningful updates include changed claims, new caveats, new code links, new benc
 Before creating a new page:
 
 1. Search existing pages by title, aliases, paper id, repo, PR, commit, and tags.
-2. Update an existing page when the new source strengthens or corrects it.
-3. Create a new page only when it introduces a distinct paper, repo, pattern, problem, benchmark, person, or reusable query.
+2. Search by pain point, method, technology, and graph-neighbor concepts.
+3. Update an existing page when the new source strengthens or corrects it.
+4. Add a new source edge to an existing concept node when the idea is not truly new.
+5. Create a new page only when it introduces a distinct paper, repo, pattern, problem, benchmark, person, or reusable query.
 
 When updating an existing page:
 
@@ -92,6 +116,7 @@ Every accepted wiki page should participate in the local link graph:
 - Convert related papers, repos, patterns, problems, and benchmarks into Markdown links, not plain text.
 - Maintain reciprocal links when two pages materially reference each other.
 - Prefer relative Markdown links so the wiki works in GitHub and local Markdown tools.
+- Prefer connecting a source node to pattern/problem nodes over creating isolated source-only pages.
 
 ## Index Rules
 

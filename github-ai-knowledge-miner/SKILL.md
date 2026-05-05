@@ -7,17 +7,18 @@ description: Use when mining GitHub commits, pull requests, releases, issues, gi
 
 ## Purpose
 
-Use this skill to turn AI research and GitHub activity into a durable wiki that an agent can search, understand, and update. The goal is not to archive everything; it is to keep high-signal engineering knowledge with source links, reusable patterns, explicit read-state metadata, and bilingual presentation when the user asks for it.
+Use this skill to turn AI research and GitHub activity into a durable knowledge graph that an agent can search, understand, and update. The goal is not to archive everything; it is to keep high-signal engineering knowledge with source links, reusable patterns, explicit read-state metadata, bilingual presentation when requested, and reciprocal links among concept nodes.
 
 ## Workflow
 
 1. Define the collection scope: user goal, time window, watched repos, trusted people, keywords, target AI areas, and license/privacy constraints.
-2. Gather candidates from metadata first: titles, abstracts, repo metadata, PR titles, commit messages, changed paths, gist descriptions, and curator identity.
-3. Score candidates before deep reading. Only promote sources that pass the collection threshold.
-4. Deep-read accepted candidates: paper text, PR context, diff patches, issue discussion, release notes, or gist revisions.
-5. Extract reusable knowledge into wiki cards with provenance, source links, confidence, `read_status`, and bilingual English/Chinese presentation when requested.
-6. Update related wiki pages: paper cards, repo cards, pattern pages, problem pages, benchmark pages, people pages, and digests. Maintain reciprocal Markdown links among related pages so the wiki forms a navigable local graph.
-7. Preserve raw sources separately from synthesized wiki pages. Do not overwrite source facts with model inference.
+2. Search existing wiki pages by title, aliases, source URLs, paper ids, PR numbers, technologies, pain points, and patterns before adding anything.
+3. Gather candidates from metadata first: titles, abstracts, repo metadata, PR titles, commit messages, changed paths, gist descriptions, and curator identity.
+4. Score candidates before deep reading. Only promote sources that pass the collection threshold and add something new to the graph.
+5. Deep-read accepted candidates: paper text, PR context, diff patches, issue discussion, release notes, or gist revisions.
+6. Extract concise knowledge nodes with provenance, source links, confidence, `read_status`, bilingual English/Chinese presentation when requested, and explicit graph edges.
+7. Update existing paper, repo, pattern, problem, benchmark, people, and digest pages before creating new pages. Maintain reciprocal Markdown links among related pages so the wiki forms a navigable local graph.
+8. Preserve raw sources separately from synthesized wiki pages. Do not overwrite source facts with model inference.
 
 ## Collection Rules
 
@@ -68,7 +69,7 @@ Use these ingest modes:
 
 ## Output Pages
 
-Prefer durable pages over one-off summaries. When the user requests bilingual output, write pages with English/Chinese paired headings or paired sentences, keep source facts unchanged, and avoid introducing extra inference in the translation.
+Prefer durable graph nodes over one-off summaries. When the user requests bilingual output, include Chinese in the frontmatter `title` and write pages with English/Chinese paired headings or paired sentences. Keep source facts unchanged and avoid introducing extra inference in the translation.
 
 - `papers/`: one paper per page.
 - `repos/`: repository profiles and implementation leads.
@@ -80,7 +81,16 @@ Prefer durable pages over one-off summaries. When the user requests bilingual ou
 
 ## Extraction
 
-Use structured extraction. Do not summarize file-by-file unless the user asks. Identify the problem, reusable idea, evidence, limits, and next actions. For bilingual pages, keep the same structure in both languages and translate the synthesis rather than the source facts.
+Use concise structured extraction. Do not summarize file-by-file unless the user asks. Prefer this node shape:
+
+- `Knowledge Point / 知识点`: one sentence.
+- `Pain Point / 痛点`: what problem exists.
+- `Method / 方法`: what method solves it.
+- `Technology / 技术`: frameworks, algorithms, runtime mechanisms, protocols, or tooling.
+- `Solves / 解决了什么`: concrete solved problem or capability.
+- `Graph Edges / 图谱边`: reciprocal links to source, pattern, problem, repo, paper, and digest nodes.
+
+For bilingual pages, keep the same structure in both languages and translate the synthesis rather than the source facts.
 
 For schemas and card templates, read `references/schemas.md`.
 

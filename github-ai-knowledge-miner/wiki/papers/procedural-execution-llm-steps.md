@@ -1,5 +1,5 @@
 ---
-title: When LLMs Stop Following Steps - A Diagnostic Study of Procedural Execution in Language Models
+title: Procedural Execution Failure / 过程执行失效
 page_type: paper
 read_status: unread
 read_by_user: false
@@ -26,58 +26,32 @@ tags:
   - read:unread
 ---
 
-## Problem / 问题
+## Knowledge Point / 知识点
 
-Final-answer accuracy can hide whether a model actually executed the procedure it was given. / 最终答案准确率会掩盖一个事实：模型是否真的按给定流程执行了过程。
+Final-answer accuracy hides whether a model actually followed the requested procedure. / 最终答案准确率会掩盖模型是否真的按流程执行。
 
-## Core Idea / 核心想法
+## Pain Point / 痛点
 
-The paper diagnoses procedural fidelity using step-wise arithmetic tasks with growing length and look-back dependencies. / 这篇论文用逐步算术任务来诊断过程忠实度，并逐渐增加长度和回看依赖。
+Agent workflows can look fine on short tasks but drift or under-execute as step count grows. / agent 流程在短任务上看起来正常，但步骤变长后会漂移或执行不足。
 
 ## Method / 方法
 
-Models receive an algorithm plus two numeric inputs and must return the final computed value. The benchmark increases difficulty by extending the procedure and making later steps depend on earlier intermediate values. / 模型收到一个算法和两个数值输入，必须返回最终计算结果。benchmark 通过延长流程、让后续步骤依赖早期中间值来提高难度。
+The paper diagnoses models with controlled arithmetic procedures whose length and look-back dependencies increase. / 论文用受控算术流程诊断模型，并逐步增加流程长度和回看依赖。
 
-## Architecture / 架构
+## Technology / 技术
 
-- Controlled procedural benchmark
-- 14-model evaluation
-- 55 datasets
-- Generation-level failure analysis
+Procedural benchmark, generation-level failure taxonomy, long-step arithmetic control tasks. / 过程 benchmark、生成级失败分类、长步骤算术控制任务。
 
-## Experiments / 实验
+## Solves / 解决了什么
 
-Average first-answer accuracy drops from 61% on 5-step procedures to 20% on 95-step procedures, and the authors identify missing answers, premature answers, self-correction, under-execution, and hallucinated extra steps. / 平均首答准确率从 5 步流程的 61% 掉到 95 步流程的 20%；作者还识别出了漏答、过早回答、自我修正、执行不足和幻觉额外步骤等失败模式。
+It provides a measurement frame for detecting long-horizon procedural drift before deploying agent workflows. / 它提供了一套测量框架，在部署 agent 流程前识别长链路过程漂移。
 
-## Limitations / 局限
+## Graph Edges / 图谱边
 
-This is a diagnostic benchmark, so it tells us a lot about failure modes but less about how to fix them. / 这是一个诊断型 benchmark，所以它更擅长告诉我们失败模式，而不是直接告诉我们怎么修。
+- Defines / 定义: [Long-Horizon Procedural Drift / 长链路过程漂移](../problems/long-horizon-procedural-drift.md)
+- Motivates / 推动: [Constrained Agent Execution / 受约束 Agent 执行](../patterns/constrained-agent-execution.md)
+- Related / 相关: [RunAgent Constraint-Guided Execution / RunAgent 约束引导执行](runagent-constraint-guided-execution.md)
+- Related implementation / 相关实现: [LangChain Tool State Ownership / LangChain 工具状态所有权](../repos/langchain-2026-05-week1.md), [Phoenix Server-Owned Agent Prompts / Phoenix 服务端 Agent Prompt](../repos/phoenix-2026-05-week1.md)
+- Weekly context / 周报上下文: [AI Weekly Digest - 2026-05-05 / AI 周报 - 2026-05-05](../weekly-digests/2026-05-05-ai-weekly.md)
+- Index / 首页: [AI Knowledge Graph Index / AI 知识图谱索引](../index.md)
 
-## Code Or Reproduction / 代码或复现
-
-No code link surfaced in the source snippet I collected. / 我收集到的来源片段里没有看到代码链接。
-
-## Agent Relevance / 与 agent 的相关性
-
-High. This is a clean warning that agentic workflows can degrade as traces lengthen, even if the model looks competent on short tasks. / 相关性很高。这清楚地提醒我们：即使模型在短任务上看起来很强，随着 trace 变长，agent 流程也会退化。
-
-## Related Papers / 相关论文
-
-- [RunAgent](runagent-constraint-guided-execution.md)
-- Other procedural execution and planning-control work
-
-## Related Repos / 相关仓库
-
-- Agent runtimes with explicit step validation and constrained execution loops, especially [LangChain](../repos/langchain-2026-05-week1.md) and [Phoenix](../repos/phoenix-2026-05-week1.md)
-
-## Local Links / 本地索引
-
-- [Wiki index / Wiki 首页](../index.md)
-- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
-- Related papers / 相关论文: [RunAgent](runagent-constraint-guided-execution.md)
-- Related repos / 相关仓库: [LangChain](../repos/langchain-2026-05-week1.md), [Phoenix](../repos/phoenix-2026-05-week1.md)
-
-## Open Questions / 开放问题
-
-- Which part of the failure is longest-trace decay versus instruction drift? / 这些失败里，多少来自长 trace 退化，多少来自指令漂移？
-- What control strategies recover procedural fidelity most effectively? / 哪些控制策略最能恢复过程忠实度？

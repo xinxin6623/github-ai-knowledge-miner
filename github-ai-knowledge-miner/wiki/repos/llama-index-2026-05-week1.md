@@ -1,5 +1,5 @@
 ---
-title: LlamaIndex - OTel Span Context Propagation Fix
+title: LlamaIndex OTel Context Propagation / LlamaIndex OTel 上下文传播
 page_type: repo
 read_status: unread
 read_by_user: false
@@ -20,52 +20,30 @@ tags:
   - read:unread
 ---
 
-## Problem Background / 问题背景
+## Knowledge Point / 知识点
 
-Spans were linked correctly in parent/child metadata, but they were not attached to the active Python context. That breaks downstream tracing tools that rely on `contextvars`. / span 在父子元数据里是连对了的，但它们没有附着到当前 Python context 上。这会破坏依赖 `contextvars` 的下游 tracing 工具。
+Tracing integrations need active context propagation, not only parent-child metadata. / tracing 集成不只需要父子元数据，也需要活跃上下文传播。
 
-## Change Summary / 变更摘要
+## Pain Point / 痛点
 
-The fix attaches created spans to context, stores the token, and detaches before span exit or drop so the active trace stack stays coherent. / 这个修复会把创建出的 span 附着到 context、保存 token，并在 span 退出或丢弃前 detach，保证当前 trace 栈保持一致。
+If spans are created but not attached to Python `contextvars`, downstream auto-instrumented spans appear as siblings instead of children. / 如果 span 被创建但没有附着到 Python `contextvars`，下游自动 instrumentation 的 span 会变成兄弟节点，而不是子节点。
 
-## Architecture Idea / 架构想法
+## Method / 方法
 
-Trace systems need both structural parentage and active context. If you only set one, you can still end up with broken observability graphs. / trace 系统需要结构上的父子关系，也需要活跃的上下文。只设置其中一个，最终还是可能得到坏掉的可观测性图。
+Attach each OTel span to the active context, store the context token, and detach it before span exit or drop. / 将每个 OTel span 附着到活跃上下文，保存 context token，并在 span 退出或丢弃前 detach。
 
-## Key Files And Symbols / 关键文件与符号
+## Technology / 技术
 
-- `OTelCompatibleSpanHandler`
-- `start_span(context=ctx)`
-- `context.attach()`
-- `prepare_to_exit_span`
-- `prepare_to_drop_span`
+OpenTelemetry, Python `contextvars`, span attach/detach tokens, LlamaIndex span handler. / OpenTelemetry、Python `contextvars`、span attach/detach token、LlamaIndex span handler。
 
-## Reusable Pattern / 可复用模式
+## Solves / 解决了什么
 
-Whenever you bridge your own span abstraction to OpenTelemetry, verify both parent linkage and current-context behavior. / 只要把你自己的 span 抽象桥接到 OpenTelemetry，就要同时验证父子关系和当前上下文行为。
+It preserves trace hierarchy across agent spans, tool calls, HTTP clients, and observability backends. / 它在 agent span、工具调用、HTTP client 和可观测性后端之间保住 trace 层级。
 
-## Tradeoffs / 取舍
+## Graph Edges / 图谱边
 
-This is a small code change with an outsized operational payoff. The main cost is that tracing integrations now have one more place to get subtly wrong if future refactors skip detach logic. / 这是一个代码量很小、但运维收益很大的改动。主要代价是未来重构如果漏掉 detach 逻辑，tracing 集成又多了一个容易出错的地方。
+- Supports / 支撑: [Observability Context Propagation / 可观测性上下文传播](../patterns/observability-context-propagation.md)
+- Related / 相关: [Phoenix Server-Owned Agent Prompts / Phoenix 服务端 Agent Prompt](phoenix-2026-05-week1.md)
+- Weekly context / 周报上下文: [AI Weekly Digest - 2026-05-05 / AI 周报 - 2026-05-05](../weekly-digests/2026-05-05-ai-weekly.md)
+- Index / 首页: [AI Knowledge Graph Index / AI 知识图谱索引](../index.md)
 
-## Tests Or Eval Evidence / 测试与证据
-
-The PR included a concrete before/after trace example, but no new unit tests were added. / 这个 PR 给出了明确的前后 trace 示例，但没有新增单元测试。
-
-## Related Papers Or Issues / 相关论文或问题
-
-- This is a useful companion to the [Phoenix](phoenix-2026-05-week1.md) tracing and agent work in the same week. / 它和本周 [Phoenix](phoenix-2026-05-week1.md) 的 tracing 与 agent 工作可以一起看。
-
-## Local Links / 本地索引
-
-- [Wiki index / Wiki 首页](../index.md)
-- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
-- Related repos / 相关仓库: [Phoenix](phoenix-2026-05-week1.md)
-
-## When To Reuse / 何时复用
-
-Reuse this exact attach/detach discipline anywhere spans need to be visible to downstream instrumented libraries. / 只要 span 需要被下游已接入 instrumentation 的库看见，就可以复用这套 attach/detach 纪律。
-
-## When Not To Reuse / 何时不复用
-
-Do not use this pattern if your tracing layer does not participate in ambient context propagation. / 如果你的 tracing 层不参与 ambient context 传播，就不必用这个模式。

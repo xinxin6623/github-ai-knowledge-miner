@@ -1,5 +1,5 @@
 ---
-title: Phoenix - Server-Side Agent Prompt Assembly and Caching
+title: Phoenix Server-Owned Agent Prompts / Phoenix 服务端 Agent Prompt
 page_type: repo
 read_status: unread
 read_by_user: false
@@ -20,52 +20,32 @@ tags:
   - read:unread
 ---
 
-## Problem Background / 问题背景
+## Knowledge Point / 知识点
 
-Agent prompt assembly was partly happening in the frontend, which makes caching harder and spreads static prompt logic across layers. / agent prompt 的组装有一部分在前端发生，这会让缓存更难做，也会把静态 prompt 逻辑分散到多层里。
+Put static agent prompt and tool guidance assembly on the server so the cache boundary and authority boundary are the same. / 把静态 agent prompt 和工具指引组装放到服务端，让缓存边界和权威边界合一。
 
-## Change Summary / 变更摘要
+## Pain Point / 痛点
 
-Phoenix moved PXI prompt and tool guidance assembly to the server, kept only user-editable instructions in the frontend, and added Anthropic prompt caching for static instructions and tool definitions. / Phoenix 把 PXI prompt 和工具指引的组装移到服务端，前端只保留用户可编辑指令，并为静态指令和工具定义加入了 Anthropic prompt caching。
+When frontend code assembles static prompt material, prompt logic leaks across layers and prompt caching becomes fragile. / 当前端组装静态 prompt 材料时，prompt 逻辑会跨层泄漏，缓存也会变脆弱。
 
-## Architecture Idea / 架构想法
+## Method / 方法
 
-Separate static prompt material from editable user input, then cache the static half at the server boundary. That gives you a cleaner contract and better token accounting. / 把静态 prompt 材料和可编辑用户输入拆开，然后在服务端边界缓存静态部分。这样契约更清楚，token 记账也更准确。
+Phoenix moved PXI prompt assembly server-side, kept only user-editable instructions in the frontend, and surfaced prompt cache token usage. / Phoenix 把 PXI prompt 组装移到服务端，前端只保留用户可编辑指令，并展示 prompt cache token 用量。
 
-## Key Files And Symbols / 关键文件与符号
+## Technology / 技术
 
-- PXI prompt assembly
-- Anthropic prompt caching
-- streamed chat metadata
-- PXI trace token details
+Server-side prompt assembly, Anthropic prompt caching, streamed chat metadata, trace token accounting. / 服务端 prompt 组装、Anthropic prompt caching、流式 chat metadata、trace token 记账。
 
-## Reusable Pattern / 可复用模式
+## Solves / 解决了什么
 
-Push prompt composition server-side when you want a stable cache boundary and lower frontend complexity. / 当你想要稳定的缓存边界、同时降低前端复杂度时，就把 prompt 组装推到服务端。
+It lowers frontend complexity, improves cache reliability, and makes agent prompt behavior easier to audit. / 它降低前端复杂度，提高缓存可靠性，并让 agent prompt 行为更容易审计。
 
-## Tradeoffs / 取舍
+## Graph Edges / 图谱边
 
-The server becomes more authoritative over prompt shape, which is good for consistency but reduces frontend flexibility. Cache telemetry also needs to be surfaced carefully so it stays understandable. / 服务端对 prompt 形状会更有权威性，这对一致性有好处，但会降低前端灵活性。cache telemetry 也得谨慎呈现，才能让人看得懂。
+- Supports / 支撑: [Single Source State Ownership / 单一状态所有权](../patterns/single-source-state-ownership.md)
+- Supports / 支撑: [Constrained Agent Execution / 受约束 Agent 执行](../patterns/constrained-agent-execution.md)
+- Related / 相关: [LangChain Tool State Ownership / LangChain 工具状态所有权](langchain-2026-05-week1.md)
+- Related / 相关: [LlamaIndex OTel Context Propagation / LlamaIndex OTel 上下文传播](llama-index-2026-05-week1.md)
+- Weekly context / 周报上下文: [AI Weekly Digest - 2026-05-05 / AI 周报 - 2026-05-05](../weekly-digests/2026-05-05-ai-weekly.md)
+- Index / 首页: [AI Knowledge Graph Index / AI 知识图谱索引](../index.md)
 
-## Tests Or Eval Evidence / 测试与证据
-
-The PR included backend and frontend test coverage, plus typecheck and lint verification. / 这个 PR 包含后端和前端测试覆盖，还做了 typecheck 和 lint 验证。
-
-## Related Papers Or Issues / 相关论文或问题
-
-- This sits in the same direction as [RunAgent](../papers/runagent-constraint-guided-execution.md) and [the procedural-execution diagnostic](../papers/procedural-execution-llm-steps.md): more explicit control over how agents are assembled and run. / 这和 [RunAgent](../papers/runagent-constraint-guided-execution.md)、[过程执行诊断](../papers/procedural-execution-llm-steps.md) 的方向一致：对 agent 的组装和运行施加更明确的控制。
-
-## Local Links / 本地索引
-
-- [Wiki index / Wiki 首页](../index.md)
-- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
-- Related papers / 相关论文: [RunAgent](../papers/runagent-constraint-guided-execution.md), [Procedural execution diagnostic](../papers/procedural-execution-llm-steps.md)
-- Related repos / 相关仓库: [LangChain](langchain-2026-05-week1.md), [LlamaIndex](llama-index-2026-05-week1.md)
-
-## When To Reuse / 何时复用
-
-Reuse when your agent UI is leaking static prompt logic or when caching needs a stable server-owned boundary. / 当你的 agent UI 泄漏了静态 prompt 逻辑，或者缓存需要一个稳定的服务端边界时，就复用这个模式。
-
-## When Not To Reuse / 何时不复用
-
-Do not centralize prompt assembly if the frontend genuinely needs to synthesize user-specific prompt structure in real time. / 如果前端确实需要实时合成用户特定的 prompt 结构，就不要把 prompt 组装完全中心化。

@@ -1,5 +1,5 @@
 ---
-title: Make Your LVLM KV Cache More Lightweight
+title: LightKV Multimodal KV Compression / LightKV 多模态 KV 压缩
 page_type: paper
 read_status: unread
 read_by_user: false
@@ -25,55 +25,30 @@ tags:
   - read:unread
 ---
 
-## Problem / 问题
+## Knowledge Point / 知识点
 
-LVLM inference pays a large KV-cache tax because vision tokens inflate prefill memory usage. / LVLM 推理会为 KV cache 支付很高的代价，因为视觉 token 会把 prefill 的内存用量顶上去。
+Vision-token KV cache can be compressed by using prompt-aware cross-modal redundancy. / 视觉 token 的 KV cache 可以利用 prompt 感知的跨模态冗余进行压缩。
 
-## Core Idea / 核心想法
+## Pain Point / 痛点
 
-LightKV compresses vision-token KV state using prompt-guided cross-modality message passing, aiming to keep general-purpose quality while shrinking cache size. / LightKV 通过 prompt 引导的跨模态消息传递压缩视觉 token 的 KV 状态，目标是在缩小 cache 的同时保住通用能力。
+LVLM inference spends large memory on vision-token KV cache during prefill. / LVLM 推理在 prefill 阶段会为视觉 token KV cache 消耗大量内存。
 
 ## Method / 方法
 
-The method progressively compresses vision tokens during prefill, guided by text prompts and cross-modal aggregation. / 这个方法在 prefill 期间逐步压缩视觉 token，并由文本 prompt 和跨模态聚合来引导。
+LightKV progressively compresses vision-token KV state using text-prompt guidance and cross-modality message passing. / LightKV 用文本 prompt 引导和跨模态消息传递，逐步压缩视觉 token 的 KV 状态。
 
-## Architecture / 架构
+## Technology / 技术
 
-- Prompt-aware compression
-- Cross-modality message passing
-- Vision-token redundancy reduction
+LVLM KV cache, prompt-aware compression, cross-modal aggregation, vision-token redundancy reduction. / LVLM KV cache、prompt 感知压缩、跨模态聚合、视觉 token 冗余削减。
 
-## Experiments / 实验
+## Solves / 解决了什么
 
-The source summary says it was evaluated across eight open-source LVLMs and eight public benchmark datasets, with reported reductions in KV size and compute while preserving performance. / 来源摘要显示，它在 8 个开源 LVLM 和 8 个公共 benchmark 数据集上做了评估，并报告了在保住性能的同时减少 KV 大小和计算量。
+It reduces multimodal inference memory and compute pressure while trying to preserve general LVLM quality. / 它降低多模态推理内存和计算压力，同时尽量保持通用 LVLM 质量。
 
-## Limitations / 局限
+## Graph Edges / 图谱边
 
-The exact compression schedule and failure cases need a deeper read before I would treat this as a production recipe. / 具体的压缩节奏和失败案例还需要更深的阅读，我才会把它当作生产方案。
+- Supports / 支撑: [KV Cache Memory Efficiency / KV Cache 内存效率](../patterns/kv-cache-memory-efficiency.md)
+- Related implementation / 相关实现: [vLLM Low-Precision KV Cache / vLLM 低精度 KV Cache](../repos/vllm-2026-05-week1.md)
+- Weekly context / 周报上下文: [AI Weekly Digest - 2026-05-05 / AI 周报 - 2026-05-05](../weekly-digests/2026-05-05-ai-weekly.md)
+- Index / 首页: [AI Knowledge Graph Index / AI 知识图谱索引](../index.md)
 
-## Code Or Reproduction / 代码或复现
-
-No code link surfaced in the source result I collected. / 我收集到的来源结果里没有看到代码链接。
-
-## Agent Relevance / 与 agent 的相关性
-
-Moderate to high. It is not an agent paper, but it matters for multimodal serving and context-budget management. / 中到高。它不是 agent 论文，但对多模态服务和上下文预算管理很重要。
-
-## Related Papers / 相关论文
-
-- [vLLM NVFP4 KV cache support](../repos/vllm-2026-05-week1.md)
-
-## Related Repos / 相关仓库
-
-- [vLLM](../repos/vllm-2026-05-week1.md)
-
-## Local Links / 本地索引
-
-- [Wiki index / Wiki 首页](../index.md)
-- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
-- Related repos / 相关仓库: [vLLM](../repos/vllm-2026-05-week1.md)
-
-## Open Questions / 开放问题
-
-- How stable is the compression under harder multimodal reasoning? / 在更难的多模态推理下，这种压缩有多稳定？
-- Does prompt guidance introduce brittle behavior on out-of-distribution vision prompts? / prompt 引导会不会让分布外的视觉输入更脆弱？

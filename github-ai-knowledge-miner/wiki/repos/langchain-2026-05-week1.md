@@ -1,5 +1,5 @@
 ---
-title: LangChain - Tool Schema and HITL Updates
+title: LangChain Tool State Ownership / LangChain 工具状态所有权
 page_type: repo
 read_status: unread
 read_by_user: false
@@ -21,54 +21,31 @@ tags:
   - read:unread
 ---
 
-## Problem Background / 问题背景
+## Knowledge Point / 知识点
 
-LangChain has two related sources of complexity here: tool schema bookkeeping and human-in-the-loop control flow. Both are places where implicit state can drift from what downstream code expects. / LangChain 在这里有两类相关复杂性：工具 schema 的账本管理，以及人类介入的控制流。两者都容易让隐式状态偏离下游代码的预期。
+Use a single root object for derived tool schema state, and model human responses as explicit tool-flow decisions. / 用单一根对象管理派生工具 schema 状态，并把人工回答建模为显式的工具流程决策。
 
-## Change Summary / 变更摘要
+## Pain Point / 痛点
 
-The `ToolSchema` PR replaced multiple overlapping cached properties on `BaseTool` with a single cached root object. The HITL PR added a `respond` decision type so a human can supply the effective tool result without executing the tool itself. / `ToolSchema` 这次 PR 把 `BaseTool` 上多个重叠的 cached property 收敛成一个根缓存对象。HITL 那个 PR 则新增了 `respond` 决策类型，让人类可以直接提供工具结果，而不必真的执行工具。
+Tool metadata can drift when schema, args, validator, and token estimates are cached separately. HITL flows also become awkward when humans can only approve, edit, or reject. / schema、args、validator、token 估算分散缓存时，工具元数据容易漂移。HITL 如果只有批准、编辑、拒绝，也很难表达“人类直接回答工具”。
 
-## Architecture Idea / 架构想法
+## Method / 方法
 
-The schema refactor makes one object own validator, JSON schema, args, and token-size estimates. The HITL change extends the decision model with a success-path synthetic `ToolMessage`, which keeps the message protocol intact. / schema 重构让一个对象同时拥有 validator、JSON schema、args 和 token 大小估计。HITL 的改动则给决策模型补了一个成功路径的合成 `ToolMessage`，保持消息协议不变。
+LangChain introduced `ToolSchema` as the root cache and added `respond` as a HITL decision that emits a synthetic successful `ToolMessage`. / LangChain 引入 `ToolSchema` 作为根缓存，并新增 `respond` 作为 HITL 决策，生成一个成功的合成 `ToolMessage`。
 
-## Key Files And Symbols / 关键文件与符号
+## Technology / 技术
 
-- `langchain_core.tools.ToolSchema`
-- `BaseTool.tool_schema`
-- `HumanInTheLoopMiddleware`
-- `RespondDecision`
-- `_process_decision`
+Pydantic `TypeAdapter`, cached root dataclass, TypedDict schema conversion, HITL middleware, provider-compatible tool-call/tool-message pairing. / Pydantic `TypeAdapter`、根 dataclass 缓存、TypedDict schema 转换、HITL middleware、兼容 provider 的 tool-call/tool-message 配对。
 
-## Reusable Pattern / 可复用模式
+## Solves / 解决了什么
 
-Use a single root cache for derived tool metadata when several public properties all depend on the same underlying schema. For HITL, represent human answers as a first-class success response rather than a special-case bypass. / 当多个公开属性都依赖同一个底层 schema 时，用单一根缓存来承载派生工具元数据。对 HITL 来说，把人类回答表示成一等公民的成功响应，而不是特殊旁路。
+It reduces schema invalidation bugs and gives agent runtimes a cleaner success path for human-supplied tool results. / 它减少 schema 失效 bug，并给 agent runtime 一个更干净的“人类提供工具结果”的成功路径。
 
-## Tradeoffs / 取舍
+## Graph Edges / 图谱边
 
-The schema refactor is cleaner but introduces a new exported dataclass that integrations may start depending on. The HITL `respond` path increases flexibility, but it also makes it easier to blur the line between tool execution and human input if governance is weak. / schema 重构更干净，但也引入了一个新的导出 dataclass，集成方可能开始依赖它。HITL 的 `respond` 路径提高了灵活性，但如果治理不足，也更容易模糊工具执行和人工输入的边界。
+- Supports / 支撑: [Single Source State Ownership / 单一状态所有权](../patterns/single-source-state-ownership.md)
+- Supports / 支撑: [Constrained Agent Execution / 受约束 Agent 执行](../patterns/constrained-agent-execution.md)
+- Related / 相关: [Phoenix Server-Owned Agent Prompts / Phoenix 服务端 Agent Prompt](phoenix-2026-05-week1.md)
+- Weekly context / 周报上下文: [AI Weekly Digest - 2026-05-05 / AI 周报 - 2026-05-05](../weekly-digests/2026-05-05-ai-weekly.md)
+- Index / 首页: [AI Knowledge Graph Index / AI 知识图谱索引](../index.md)
 
-## Tests Or Eval Evidence / 测试与证据
-
-- The schema PR kept identity-based caching tests passing and added coverage for `NotRequired` TypedDict handling. / schema PR 维持了基于 identity 的缓存测试，并补了 `NotRequired` TypedDict 处理的覆盖。
-- The HITL PR preserved provider-required tool-call/tool-message pairing in the synthetic success path. / HITL PR 在合成成功路径里保留了 provider 要求的 tool-call/tool-message 配对。
-
-## Related Papers Or Issues / 相关论文或问题
-
-- This repo movement lines up with [RunAgent](../papers/runagent-constraint-guided-execution.md), [the procedural-execution diagnostic](../papers/procedural-execution-llm-steps.md), and the [weekly digest](../weekly-digests/2026-05-05-ai-weekly.md): stronger execution control and better state ownership. / 这次仓库变动和 [RunAgent](../papers/runagent-constraint-guided-execution.md)、[过程执行诊断](../papers/procedural-execution-llm-steps.md) 以及 [周报](../weekly-digests/2026-05-05-ai-weekly.md) 的主题一致：更强的执行控制，以及更清晰的状态所有权。
-
-## Local Links / 本地索引
-
-- [Wiki index / Wiki 首页](../index.md)
-- [Weekly digest / 周报](../weekly-digests/2026-05-05-ai-weekly.md)
-- Related papers / 相关论文: [RunAgent](../papers/runagent-constraint-guided-execution.md), [Procedural execution diagnostic](../papers/procedural-execution-llm-steps.md)
-- Related repos / 相关仓库: [Phoenix](phoenix-2026-05-week1.md)
-
-## When To Reuse / 何时复用
-
-Reuse the schema pattern in any agent or tool framework that has multiple cached derivations of the same tool definition. / 只要是 agent 或工具框架里有多个缓存派生结果依赖同一定义，就可以复用这个 schema 模式。
-
-## When Not To Reuse / 何时不复用
-
-Do not use the HITL `respond` pattern where human answers must be auditable as separate review artifacts rather than tool results. / 如果人类回答必须作为单独可审计的 review 产物，而不是工具结果，就不要用这个 HITL `respond` 模式。
