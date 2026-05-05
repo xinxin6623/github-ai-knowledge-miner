@@ -37,7 +37,12 @@ This wiki is organized as linked knowledge nodes, not source dumps. Each node an
 - [Observability Context Propagation / 可观测性上下文传播](patterns/observability-context-propagation.md)
 - [Long-Horizon Procedural Drift / 长链路过程漂移](problems/long-horizon-procedural-drift.md)
 
+## Edge-Type Nodes / 边类型节点
+
+No semantic edge type has reached the promotion threshold yet. Current threshold: 10 semantic occurrences. Navigation edges such as `Index / 首页` and `Weekly context / 周报上下文` do not count. / 目前还没有语义边类型达到升级阈值。当前阈值：10 条语义边。`Index / 首页` 和 `Weekly context / 周报上下文` 这类导航边不计入。
+
 ## Update Policy / 更新策略
 
 Before adding a new page, search existing titles, aliases, source URLs, and linked concepts. If the idea already exists, update the existing node and add a new source edge instead of creating a duplicate. / 新增页面前先检索已有标题、别名、来源链接和概念节点。如果想法已经存在，就更新旧节点并增加新的来源边，不创建重复节点。
 
+When a semantic edge label appears 10 times, research that relationship and promote it into `edge-types/` as its own explanatory node. / 当某个语义边标签出现 10 次时，要调研这类关系，并把它升级到 `edge-types/` 中作为独立解释节点。

@@ -17,6 +17,7 @@ wiki/
   patterns/
   problems/
   benchmarks/
+  edge-types/
   people/
   weekly-digests/
   queries/
@@ -117,6 +118,47 @@ Every accepted wiki page should participate in the local link graph:
 - Maintain reciprocal links when two pages materially reference each other.
 - Prefer relative Markdown links so the wiki works in GitHub and local Markdown tools.
 - Prefer connecting a source node to pattern/problem nodes over creating isolated source-only pages.
+
+## Edge-Type Promotion Rule
+
+Edges can become knowledge nodes. When a semantic edge label reaches 10 occurrences, promote that edge characteristic into `wiki/edge-types/`.
+
+Semantic edge labels count toward the threshold:
+
+- `Supports / 支撑`
+- `Evidence / 证据`
+- `Mitigates / 缓解`
+- `Defines / 定义`
+- `Implements / 实现`
+- `Depends on / 依赖`
+- `Contradicts / 矛盾`
+- Other labels that explain a real knowledge relationship.
+
+Navigation or maintenance links do not count:
+
+- `Index / 首页`
+- `Weekly context / 周报上下文`
+- `Local Links / 本地索引`
+- raw source links or table-of-contents links.
+
+When the threshold is reached:
+
+1. Search `edge-types/`, `patterns/`, `problems/`, and existing source nodes for duplicates.
+2. Research the relationship across the linked nodes and, when needed, primary sources.
+3. Create or update an edge-type node with this structure:
+
+```text
+## Edge Meaning / 边的含义
+## Why It Appears / 为什么频繁出现
+## When To Use / 何时使用
+## Failure Modes / 失败模式
+## Examples / 示例
+## Counterexamples / 反例
+## Graph Edges / 图谱边
+```
+
+4. Link representative source nodes back to the edge-type node.
+5. Add the edge-type node to `wiki/index.md`.
 
 ## Index Rules
 

@@ -17,8 +17,9 @@ Use this skill to turn AI research and GitHub activity into a durable knowledge 
 4. Score candidates before deep reading. Only promote sources that pass the collection threshold and add something new to the graph.
 5. Deep-read accepted candidates: paper text, PR context, diff patches, issue discussion, release notes, or gist revisions.
 6. Extract concise knowledge nodes with provenance, source links, confidence, `read_status`, bilingual English/Chinese presentation when requested, and explicit graph edges.
-7. Update existing paper, repo, pattern, problem, benchmark, people, and digest pages before creating new pages. Maintain reciprocal Markdown links among related pages so the wiki forms a navigable local graph.
-8. Preserve raw sources separately from synthesized wiki pages. Do not overwrite source facts with model inference.
+7. Update existing paper, repo, pattern, problem, benchmark, people, edge-type, and digest pages before creating new pages. Maintain reciprocal Markdown links among related pages so the wiki forms a navigable local graph.
+8. Count semantic graph-edge labels after updates. When one edge type reaches 10 semantic occurrences, research that relationship and promote the edge characteristic into its own wiki node.
+9. Preserve raw sources separately from synthesized wiki pages. Do not overwrite source facts with model inference.
 
 ## Collection Rules
 
@@ -76,6 +77,7 @@ Prefer durable graph nodes over one-off summaries. When the user requests biling
 - `patterns/`: reusable designs such as memory compaction, tool retry loops, hybrid RAG, or eval harnesses.
 - `problems/`: problem-first pages such as context drift, unreliable tool calls, citation faithfulness, or agent regression testing.
 - `benchmarks/`: eval methods, datasets, metrics, and when to use them.
+- `edge-types/`: promoted relationship types such as evidence, supports, mitigates, depends-on, or implements when an edge label becomes frequent enough to deserve explanation.
 - `people/`: high-signal authors, maintainers, labs, or engineering teams.
 - `weekly-digests/`: concise synthesis of what changed and what matters.
 
@@ -91,6 +93,18 @@ Use concise structured extraction. Do not summarize file-by-file unless the user
 - `Graph Edges / 图谱边`: reciprocal links to source, pattern, problem, repo, paper, and digest nodes.
 
 For bilingual pages, keep the same structure in both languages and translate the synthesis rather than the source facts.
+
+## Edge Promotion
+
+Semantic edge labels are part of the knowledge graph. Count only meaning-bearing edges such as `Supports`, `Evidence`, `Mitigates`, `Defines`, `Implements`, `Depends on`, and `Contradicts`. Do not count navigation edges such as `Index`, `Weekly context`, or maintenance links.
+
+When a semantic edge label reaches 10 occurrences:
+
+1. Search existing `edge-types/`, `patterns/`, and `problems/` pages to avoid duplicate edge-type nodes.
+2. Do targeted research across the linked source nodes and any needed external primary sources.
+3. Create or update an `edge-types/` node that explains the relationship itself: what the edge means, why it appears often, when to use it, failure modes, examples, and counterexamples.
+4. Link all nodes using that edge type back to the new edge-type node where useful.
+5. Add the edge-type node to `wiki/index.md`.
 
 For schemas and card templates, read `references/schemas.md`.
 
